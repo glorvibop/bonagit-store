@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Chocolates Collection</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file for styling -->
+</head>
+<body>
+    <header>
+        <h1>Premium Chocolates Collection</h1>
+    </header>
+    <section id="chocolates">
+        {% for product in products %}
+        <article>
+            <h2>{{ product.name }}</h2>
+            <p><strong>Price:</strong> USD {{ product.price }}</p>
+            <p><strong>Description:</strong> {{ product.description }}</p>
+            <p><strong>Cocoa Ratio:</strong> {{ product.cocoa_ratio }}%</p>
+        </article>
+        {% empty %}
+        <p>No chocolates available.</p>
+        {% endfor %}
+    </section>
+</body>
+</html>
