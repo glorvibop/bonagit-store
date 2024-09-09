@@ -1,9 +1,14 @@
 from django.shortcuts import render
-from .models import Product  # Import the Product model
 
 def show_main(request):
-    products = Product.objects.all()  # Retrieve all products from the database
     context = {
-        'products': products  # Add the products to the context
+        'name_product' : 'Läderach',
+        'price' : '$110',
+        'description' : 'Premium chocolate from Swiss with the freshest ingredients to create memorable moments of joy!',
+        'type' : 'Dark Chocolate',
+        'cocoa_ratio' : '80%',
+        'app_name' : 'Bonagit Store',
+        'name' : 'Shaine Glorvina Mathea',
+        'my_class' : 'PBP B'
     }
     return render(request, "main.html", context)
