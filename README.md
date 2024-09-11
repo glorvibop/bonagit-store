@@ -8,7 +8,7 @@ Pertama, saya membuat direktori dan repositori baru pada GitHub untuk project e-
 
 Selanjutnya, saya melanjutkan dengan mengikuti Tutorial 0 untuk mengatur Django, yang meliputi langkah-langkah seperti mengaktifkan _virtual environment_ (untuk memastikan project saya terisolasi) dan menginstall dependencies yang diperlukan. Kemudian, saya melakukan beberapa modifikasi pada ```settings.py``` dan menambahkan berkas ```.gitignore``` untuk mengelola file yang tidak perlu diunggah ke repositori. Proses selanjutnya adalah pembuatan aplikasi Django, konfigurasi routing, dan berbagai persiapan lain sebagaimana diuraikan dalam Tutorial 0.
 
-Setelah melakukan hal yang disebut di atas, saya membuka PWS (Pacil Web Service) untuk membuat project baru. Saya melakukan modifikasi pada ```settings.py```, menambahkan URL deployment PWS, yaitu shaine-glorvina-bonagitstore.pbp.cs.ui.ac.id, dan melanjutkan prosedur deployment PWS sesuai dengan instruksi dalam Tutorial 0.
+Setelah melakukan hal yang disebut di atas, saya membuka PWS (Pacil Web Service) untuk membuat project baru. Saya melakukan modifikasi pada ```settings.py```, menambahkan URL deployment PWS, yaitu ```shaine-glorvina-bonagitstore.pbp.cs.ui.ac.id```, dan melanjutkan prosedur deployment PWS sesuai dengan instruksi dalam Tutorial 0.
 
 Di dalam aplikasi utama, saya mendefinisikan sebuah model ```ChocolateProduct``` yang mencakup atribut ```name_product``` dengan tipe data ```CharField```, ```price``` dengan tipe data ```FloatField```, ```description``` dengan tipe data ```TextField```, ```type``` dengan tipe data ```CharField```, dan ```cocoa_ratio``` dengan tipe data ```IntegerField```. Hal ini merupakan langkah fundamental karena model bertindak sebagai blueprint untuk data yang disimpan, diproses, dan dikelola dalam aplikasi saya.
 
@@ -29,7 +29,7 @@ Fitur utama ```Git``` meliputi _Branching and Merging_ yang developers untuk men
 
 Selain itu, ```Git``` mendukung development yang terdistribusi. Hal mempercepat proses rilis perangkat lunak dengan memungkinkan pembaruan yang sering dan kecil, sehingga mempercepat siklus rilis secara keseluruhan.
 
-#### 4. Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
+### 4. Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
 Menurut saya, Django dijadikan permulaan pembelajaran pengembangan perangkat lunak karena sebelumnya kami telah mempelajari bahasa pemrograman Python yang juga digunakan dalam Django. Di lingkungan industri, Django merupakan salah satu framework yang umum digunakan dan menawarkan simplicity, flexibility, reliability, dan scalability. Hal ini berarti Django telah memiliki komunitas yang cukup luas. Django juga memiliki syntax yang relatif mudah dan memiliki web server sendiri membuatnya lebih secure dari framework lain.
 
 ### 5. Mengapa model pada Django disebut sebagai ORM?
