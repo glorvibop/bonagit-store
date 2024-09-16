@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% block content %}
 
 <head>
     <meta charset="UTF-8">
@@ -34,6 +34,24 @@
             box-shadow: 0 3px 5px rgba(128, 128, 128, 0.4); 
         }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+        }
+        th {
+            background-color: #f0f8ff;
+            color: #00008B;
+        }
+
         p {
             font-family: 'Roboto Mono', monospace;
             background-color: white; 
@@ -43,6 +61,17 @@
             width: 20%;
             margin: 10px 20px 0;
         }
+
+        button {
+            font-family: 'Roboto Mono', monospace; 
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
     </style>
 </head>
 
@@ -52,13 +81,44 @@
     <p>Nama:  {{ name }}</p>
     <p>Kelas:  {{ my_class }}</p>
 
-    <div class="product">
-        <h2>{{ name_product }}</h3>
+    <!-- <div class="product">
+        <h2>{{ product_name }}</h2>
         <p>Price: {{ price }}</p>
         <p>Description: {{ description }}</p>
         <p>Type: {{ type }}</p>
         <p>Cocoa Ratio: {{ cocoa_ratio }}</p>
-    </div>
+    </div> -->
 </body>
 
-</html>
+{% if not product_entries %}
+<h2>We don't have any product(s) right now. Sorry!</h2>
+{% else %}
+<table>
+  <tr>
+    <th>Product</th>
+    <th>Price</th>
+    <th>Description</th>
+    <th>Type</th>
+    <th>Cocoa Ratio</th>
+  </tr>
+
+  {% comment %} Berikut cara memperlihatkan data mood di bawah baris ini 
+  {% endcomment %} 
+  {% for product_entry in product_entries %}
+  <tr>
+    <td>{{product_entry.product_name}}</td>
+    <td>${{product_entry.price}}</td>
+    <td>{{product_entry.description}}</td>
+    <td>{{product_entry.type}}</td>
+    <td>{{product_entry.cocoa_ratio}}%</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<br />
+
+<a href="{% url 'main:create_product_entry' %}">
+  <button>Add New Product</button>
+</a>
+{% endblock content %}
