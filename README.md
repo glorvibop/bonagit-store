@@ -36,7 +36,7 @@ Selain itu, ```Git``` mendukung development yang terdistribusi. Hal mempercepat 
 ### 4. Menurut Anda, dari semua framework yang ada, mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
 Menurut saya, Django dijadikan permulaan pembelajaran pengembangan perangkat lunak karena sebelumnya kami telah mempelajari bahasa pemrograman Python yang juga digunakan dalam Django. Di lingkungan industri, Django merupakan salah satu framework yang umum digunakan dan menawarkan simplicity, flexibility, reliability, dan scalability. Hal ini berarti Django telah memiliki komunitas yang cukup luas. Django juga memiliki syntax yang relatif mudah dan memiliki web server sendiri membuatnya lebih secure dari framework lain.
 
-### 5. Mengapa model pada Django disebut sebagai ORM?
+### 5. Mengapa model pada Django disebut sebagai ORM? 
 Models pada Django disebut sebagai ORM (_Object Relational Mapping_) karena Models pada Django menyediakan sebuah lapisan abstraksi yang memungkinkan developers untuk melakukan pemetaan data (_mapping_) tanpa perlu menulis SQL secara manual. Sebagai gantinya, developers bisa berinteraksi dengan database menggunakan bahasa Python.
 </details>
 
