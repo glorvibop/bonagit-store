@@ -13,10 +13,10 @@ from django.urls import reverse
 
 @login_required(login_url='/login') # Agar main page HANYA dapat diakses oleh pengguna yang sudah login (terautentikasi)
 def show_main(request):
-    product_entries = ChocolateProduct.objects.filter(user=request.user)
+    product_entries = ChocolateProduct.objects.filter(user=request.user) # Agar menampilkan Product yang HANYA berhubungan dengan specific user 
 
     context = {
-        'name': request.user.username,
+        'name': request.user.username, # Menampilakn nama user yang sedang logged in.
         'product_name' : 'Läderach',
         'price' : '$110',
         'description' : 'Premium chocolate from Swiss with the freshest ingredients to create memorable moments of joy!',
@@ -36,7 +36,7 @@ def create_product_entry(request):
     form = ProductForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
-        product_entry = form.save(commit=False)
+        product_entry = form.save(commit=False) # Menambahkan informasi user sebelum objek disimpan ke database
         product_entry.user = request.user
         product_entry.save()
         return redirect('main:show_main')

@@ -4,7 +4,7 @@
 
 <details>
 <summary>
-  <span style="font-size:16px;"><b>Tugas 2 PBP: Implementasi Model-View-Template (MVT) pada Django</b></span>
+  <span style="font-size:16px;"><b>Tugas 2: Implementasi Model-View-Template (MVT) pada Django</b></span>
 </summary>
 
 ### 1. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
@@ -42,7 +42,7 @@ Models pada Django disebut sebagai ORM (_Object Relational Mapping_) karena Mode
 
 <details>
 <summary>
-  <span style="font-size:16px;"><b>Tugas 3 PBP: Implementasi Form dan Data Delivery pada Django</b></span>
+  <span style="font-size:16px;"><b>Tugas 3: Implementasi Form dan Data Delivery pada Django</b></span>
 </summary>
 
 ### 1. Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
@@ -78,4 +78,32 @@ Terakhir, saya juga menambahkan path URL ke dalam variabel ```urlpatterns``` pad
 
 - JSON by ID
 ![hasil askes URL json by id](https://github.com/user-attachments/assets/87099bb8-005d-41b6-a5f8-a8ef1a25c8a4)
+</details>
 
+<details>
+<summary>
+  <span style="font-size:16px;"><b>Tugas 4: Implementasi Autentikasi, Session, dan Cookies pada Django</b></span>
+</summary>
+
+### 1. Apa perbedaan antara HttpResponseRedirect() dan redirect()?
+```HttpResponseRedirect()``` dan ```redirect()``` adalah dua metode di Django untuk mengelola pengalihan user ke URL yang berbeda, tetapi keduanya memiliki perbedaan yang signifikan dalam penggunaan dan fleksibilitas. ```HttpResponseRedirect()``` hanya mengambil single argumen yaitu URL. Sementara itu, ```redirect()``` adalah fungsi shortcut yang lebih fleksibel, mendukung nama view, model, atau URL sebagai argumen, dan secara otomatis menghasilkan URL yang sesuai untuk pengalihan.
+
+### 2. Jelaskan cara kerja penghubungan model Product dengan User!
+Penghubungan antara model Product dengan User dilakukan melalui field ForeignKey yang didefinisikan dalam model ```ChocoalteProduct```. Field ForeignKey ini menunjuk ke model ```User``` yang memungkinkan setiap produk terhubung dengan satu user tertentu (menciptakan relasi _many-to-one_). Parameter ```on_delete=models.CASCADE``` menentukan bahwa jika user dihapus, semua produk yang terhubung dengan user tersebut juga akan dihapus, memastikan integritas data.
+
+### 3. Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.
+Authentication adalah proses verifikasi identitas user (biasanya melalui username dan password) untuk memastikan user adalah benar-benar siapa yang dia claim. Sementara itu, authorization adalah langkah selanjutnya setelah autentikasi, yang menentukan hak akses user terhadap sumber daya tertentu dalam aplikasi. Pada saat login, Django terlebih dahulu melakukan authentication untuk memverifikasi identitas user. Setelah terverifikasi, Django kemudian melakukan authorization untuk menentukan akses apa saja yang boleh dilakukan oleh user tersebut.
+
+Django menggunakan ```django.contrib.auth``` untuk authentication, yang mengelola login, logout, dan sesi user. Untuk authorization, Django mengatur hak akses melalui sistem permissions yang memungkinkan pengaturan izin spesifik untuk user atau grup. Dekorator seperti ```@login_required``` digunakan untuk membatasi akses ke fungsi tertentu hanya untuk user yang terautentikasi.
+
+### 4. Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?
+Django mengingat user yang login dengan session yang disimpan dalam cookies. Session ID yang selalu unik akan disimpan pada browser user dan database setelah user berhasil login. Setiap akses halaman, Django memeriksa session ID ini untuk verifikasi login. Selain itu, cookies juga bisa menyimpan preferensi user dan melacak aktivitasnya. Namun, cookies tidak selalu aman. Cookies yang tidak aman bisa dicuri melalui serangan seperti cross-site scripting  XSS. Django memperkuat keamanan cookies dengan opsi HttpOnly yang membatasi akses JavaScript dan Secure yang memaksa penggunaan HTTPS.
+
+### 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+Pertama-tama, saya mengimplementasikan fitur authentication di aplikasi Django dengan mengimplementasikan fungsi registrasi, login, dan logout. Prosesnya dimulai dengan memodifikasi ```views.py``` untuk menambahkan fungsi ```register``` yang memanfaatkan form bawaan Django. Saya juga membuat halaman HTML, ```register.html```, untuk form tersebut dan mendefinisikan URL yang sesuai dalam ```urlpatterns``` untuk mengakses halaman register.
+
+Setelah mengatur register, saya melanjutkan dengan implementasi fungsi login menggunakan modul ```authenticate``` dan ```login``` dari Django. Saya menambahkan fungsi ```login_user``` di ```views.py``` dan membuat halaman ```login.html``` yang menyediakan form login. URL untuk halaman login juga saya tambahkan pada ```urlpatterns```. Untuk logout, saya menambahkan fungsi yang memanggil logout yaitu ```logout_user``` dari Django di ```views.py```, lalu memodifikasi ```main.html``` dengan menambahkan hyperlink tag untuk logout, dan membuat URL yang sesuai untuk aksi tersebut. Setelah mengimplementasikan fungsi registrasi, login, dan logout, saya menyisipkan decorator ```@login_required(login_url='/login')``` di atas fungsi ```show_main``` agar halaman main hanya dapat diakses oleh user yang sudah login.
+
+Selanjutnya, saya menghubungkan model ```ChocolateProduct``` dengan ```User``` menggunakan ForeignKey. Ini memungkinkan setiap produk yang dibuat saling terikat dengan user yang membuatnya. Dengan ini, terciptalah relasi _many-to-one_ dimana setiap produk dihubungkan ke satu user dan satu user bisa memiliki banyak produk. Saya memodifikasi fungsi ```create_product_entry``` untuk menyimpan produk baru dengan mengasosiasikannya dengan user yang login. Saya juga memastikan bahwa hanya produk yang terkait dengan user yang login yang ditampilkan di main page.
+
+Terakhir, saya menambahkan fitur untuk menyimpan dan menampilkan waktu login terakhir pengguna menggunakan cookies. Di fungsi ```login_user```, saya mengatur cookie ```last_login``` setelah pengguna berhasil login. Saya juga memodifikasi fungsi ```logout_user``` untuk menghapus cookie tersebut. Informasi waktu login terakhir ditampilkan di main page.
