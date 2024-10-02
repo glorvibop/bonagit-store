@@ -1,6 +1,6 @@
 # Welcome to Bonagit Store! :chocolate_bar:
 
-> Link Deployment PWS : http://shaine-glorvina-bonagitstore.pbp.cs.ui.ac.id/
+> Link Deployment PWS : [Bonagit Store](http://shaine-glorvina-bonagitstore.pbp.cs.ui.ac.id/)
 
 <details>
 <summary>
@@ -106,4 +106,45 @@ Setelah mengatur register, saya melanjutkan dengan implementasi fungsi login men
 
 Selanjutnya, saya menghubungkan model ```ChocolateProduct``` dengan ```User``` menggunakan ForeignKey. Ini memungkinkan setiap produk yang dibuat saling terikat dengan user yang membuatnya. Dengan ini, terciptalah relasi _many-to-one_ dimana setiap produk dihubungkan ke satu user dan satu user bisa memiliki banyak produk. Saya memodifikasi fungsi ```create_product_entry``` untuk menyimpan produk baru dengan mengasosiasikannya dengan user yang login. Saya juga memastikan bahwa hanya produk yang terkait dengan user yang login yang ditampilkan di main page.
 
-Terakhir, saya menambahkan fitur untuk menyimpan dan menampilkan waktu login terakhir pengguna menggunakan cookies. Di fungsi ```login_user```, saya mengatur cookie ```last_login``` setelah pengguna berhasil login. Saya juga memodifikasi fungsi ```logout_user``` untuk menghapus cookie tersebut. Informasi waktu login terakhir ditampilkan di main page.
+Terakhir, saya menambahkan fitur untuk menyimpan dan menampilkan waktu login terakhir user menggunakan cookies. Di fungsi ```login_user```, saya mengatur cookie ```last_login``` setelah user berhasil login. Saya juga memodifikasi fungsi ```logout_user``` untuk menghapus cookie tersebut. Informasi waktu login terakhir ditampilkan di main page.
+</details>
+
+<details>
+<summary>
+  <span style="font-size:16px;"><b>Tugas 5: Desain Web menggunakan HTML, CSS dan Framework CSS</b></span>
+</summary>
+
+### 1. Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+CSS menentukan prioritas selector berdasarkan konsep _specificity_. Prioritas pengamblian CSS selecetor dari terendah ke tertinggi:
+- Universal Selector
+- Type Selector
+- Class, pseudo-class, attribute selector
+- ID Selector
+- Inline Styles
+- !important
+
+### 2. Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design!
+Responsive design sangat penting karena tidak semua user memiliki device (desktop, table, ponsel, dsb.) yang sama. Jika sebuah design hanya disesuaikan untuk satu ukuran layar, user akan mengalami kesulitan mengakses fitur-fitur situs pada perangkat lain. Sekarang, hampir semua website sudah menerapkan responsive design untuk memastikan aksesibilitas yang baik di berbagai perangkat. Salah satu contoh website responsive adalah [Pinterest](https://id.pinterest.com/). Namun, ada juga website yang sengaja dibuat non-responsive untuk keperluan demonstrasi seperti [Non-Responsive Website](https://dequeuniversity.com/library/responsive/1-non-responsive)
+
+### 3. Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+![margin border padding content](https://github.com/user-attachments/assets/37c65fa1-e33d-4010-883d-fc7b3f42252c)
+- Margin merupakan ruang di luar border elemen yang memberikan jarak antar elemen satu dengan yang lain
+- Border merupakan garis yang mengelilingi elemen (berada di antara margin dan padding). Border digunakan untuk membatasi elemen dan bisa diatur ketebalannya, jenisnya (seperti solid atau dashed), serta warnanya.
+- Padding merupakan ruang di dalam elemen yang memberikan jarak antara content suatu elemen dengan bordernya.
+
+### 4. Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+Flexbox dan Grid adalah dua sistem tata letak CSS yang memfasilitasi pembuatan layout responsive dengan kemudahan pengaturan yang berbeda. 
+
+- Flexbox fokus pada distribusi ruang dalam satu dimensi, memungkinkan elemen disusun secara horizontal atau vertikal di dalam kontainer. Ini sangat berguna untuk tata letak yang memerlukan penyesuaian seperti meratakan atau memusatkan elemen dengan properti seperti justify-content dan align-items. 
+- Grid Layout adalah metode yang lebih kompleks dan menawarkan dua dimensi (baris dan kolom) yang mendukung pengaturan elemen yang lebih detail dan presisi menggunakan properti seperti grid-template-columns dan grid-template-rows. 
+
+Flexbox cocok untuk tata letak sederhana seperti navigasi atau kolom produk, sedangkan Grid ideal untuk desain yang lebih kompleks dengan banyak elemen seperti layout halaman dengan area header, konten, dan sidebar yang terdefinisi dengan baik. Penggunaan kedua sistem ini memperkaya fleksibilitas dalam desain web modern, memungkinkan pembuatannya menjadi lebih dinamis dan adaptif.
+
+### 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+Pertama, saya membuat fitur edit dan delete menu dengan menambahkan 2 function baru pada direktori ```main/views.py``` yaitu function ```edit_product``` dan ```delete_product```. Kemudian, saya membuat template untuk menampilkan view tersebut dengan menghubungkan CDN Tailwind CSS ke file ```templates/base.html```. Setelah menghubungkan Tailwind, saya membuat file ```main/templates/edit_product.html``` dan langsung styling dengan TailwindCSS. Tak lupa, saya juga mengintegrasi dengan route website dan menambahkan routing pada ```urls.py``` untuk kedua function yang telah dibuat pada ```views.py```.
+
+Saya juga menambahkan beberapa gambar pada website saya agar tampilannya lebih menarik. Untuk melakukan hal ini, saya membuat konfigurasi static files dengan membuat direktori ```static``` yang berisi subdirektori ```css``` dan ```image``` untuk file-file yang dibutuhkan. Setelah itu, saya memodifikasi file ```settings.py``` dengan menambahkan barisan kode pada ```MIDDLEWARE``` dan ```STATIC_URL``` seperti yang ada di Tutorial 4 agar Django dapat mengelola file statis secara otomatis.
+
+Pada direktori ```static/css``` saya menambahkan file ```global.css``` untuk melakukan styling yang diperlukan dalam website saya. Jangan lupa untuk selalu menambahkan ```{% load static %}``` pada setiap template yang ingin menggunakan static files yang telah dibuat. Saya juga telah membuat ```navbar.html``` untuk menampilkan navabar pada setiap template. Jangan lupa untuk selalu menambahkan ```{% include '<nama-file>'% }. Saya juga membuat card_food.html serta card_info.html pada main/templates. Terakhir, saya melakukan styling dengan TailwindCSS untuk file create_food_entry.html, login.html, main.html, dan register.html sampai mendapatkan layout dan design yang saya inginkan.
+
+</details>
