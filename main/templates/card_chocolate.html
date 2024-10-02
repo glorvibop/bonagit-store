@@ -1,0 +1,39 @@
+{% load static %}
+
+<div class="relative break-inside-avoid justify-center items-center hover:scale-105 transition duration-300">
+    <!-- Clamp Decorative Element -->
+    <div class="absolute top-0 z-10 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <img src="{% static 'image/clamp-black.png' %}" alt="CLAMP YAY" class="w-24 h-15"/>
+    </div>
+    
+    <!-- Card Container -->
+    <div class="relative top-5 bg-white shadow-md rounded-lg mb-20 flex flex-col border-[#A1867F] transform hover:rotate-0 transition-transform duration-300">
+        <!-- Card Header -->
+        <div class="bg-[#A1867F] text-[#172554] p-4 rounded-t-lg">
+            <h3 class="font-bold text-xl mb-1">{{ product_entry.product_name }}</h3>
+            <p class="text-sm">{{ product_entry.type }}</p>
+        </div>
+        
+        <!-- Card Body -->
+        <div class="p-4">
+            <p class="text-[#172554] mb-2">{{ product_entry.description }}</p>
+            <p class="font-semibold text-lg text-[#172554] mb-2">${{ product_entry.price }}</p>
+            <div class="mt-4">
+                <p class="text-[#172554] font-semibold mb-2">Cocoa Ratio: {{ product_entry.cocoa_ratio}}%</p>
+                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-[#A1867F]">
+                    <div style="width:{{ product_entry.cocoa_ratio }}%" class="animate-shine shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-[#3D3330]"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="absolute top-2 right-2 flex space-x-1">
+            <a href="{% url 'main:edit_product' product_entry.pk %}" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 transition duration-300 shadow-md">
+                <img src="{% static 'image/edit.png' %}" alt="edit button" class="size-5"/>
+            </a>
+            <a href="{% url 'main:delete_product' product_entry.pk %}" class="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition duration-300 shadow-md align-center">
+                <img src="{% static 'image/delete.png' %}" alt="delete button" class="size-5"/>
+            </a>
+        </div>
+    </div>
+</div>

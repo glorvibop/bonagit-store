@@ -1,140 +1,52 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Bonagit Store</title>
+{% endblock meta %}
+
 {% block content %}
+{% include 'navbar.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bonagit Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&family=Roboto:wght@100;400&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background-color: #e9ddfd;
-            font-family: 'Poppins', sans-serif;
-        }
+<div class="overflow-x-hidden px-4 md:px-8 pb-8 pt-20 min-h-screen flex flex-col" style="background-image: url('{% static 'image/choco-background.jpg' %}'); background-size: cover; background-position: center;">
+  <div class="justify-start px-3 mb-4 relative">
+    <div class="relative grid grid-cols-1 z-30 md:grid-cols-3 gap-10">
+      {% include "card_info.html" with title='NPM' value=npm %}
+      {% include "card_info.html" with title='Name' value=my_name %}
+      {% include "card_info.html" with title='Class' value=my_class %}
+    </div>
+    <div class="w-full px-6 absolute top-[44px] left-0 z-20 hidden md:flex">
+      <div class="w-full min-h-4">
+      </div>
+    </div>
+    <div class="h-full w-full py-6  absolute top-0 left-0 z-20 md:hidden flex ">
+      <div class="h-full min-w-4 mx-auto">
+      </div>
+    </div>
+</div>
+    <div class="flex justify-center mb-6 animate-pulse px-3 mb-4">
+        <a href="{% url 'main:create_product_entry' %}" class="bg-[#172554] hover:bg-[#210254] text-white font-bold py-2 px-4 mb-5 rounded-lg transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+            Add New Product Entry
+        </a>
+    </div>
+    
+    {% if not product_entries %}
+    <div class="flex flex-col items-center justify-center min-h-[24rem] p-6">
+        <img src="{% static 'image/sedih-banget.png' %}" alt="Sad face" class="w-35 h-32 mb-4"/>
+        <p class="text-center text-gray-600 mt-4">Belum ada data product :(</p>
+    </div>
+    {% else %}
+    <div class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6 w-full">
+        {% for product_entry in product_entries %}
+            {% include 'card_chocolate.html' with product_entry=product_entry %}
+        {% endfor %}
+    </div>
+    {% endif %}
 
-        h1 {
-            color: #00008B; 
-            font-size: xx-large;
-            text-shadow: 2px 2px 5px #b0e0e6;
-            border-radius: 10px;
-            padding: 20px;
-            background-color: #f0f8ff;
-            box-shadow: 0 4px 6px gray;
-        }
-
-        h2 {
-            color: #d33f3f; 
-            font-size: x-large; 
-            text-shadow: 1px 1px 3px #deb0b0; 
-            border-radius: 8px; 
-            padding: 15px;
-            width: 23%;
-            background-color: #fae6e6; 
-            margin: 10 0px;
-            box-shadow: 0 3px 5px rgba(128, 128, 128, 0.4); 
-        }
-
-        h5 {
-            font-family: 'Roboto Mono', monospace;
-            font-size: small;
-            color: #606060;
-            margin-top: 15px;
-            margin-bottom: 15px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #dddddd;
-        }
-        th {
-            background-color: #f0f8ff;
-            color: #00008B;
-        }
-
-        p {
-            font-family: 'Roboto Mono', monospace;
-            background-color: white; 
-            border-radius: 8px;
-            padding: 10px 20px;
-            box-shadow: 0 2px 5px gray;
-            width: 20%;
-            margin: 10px 20px 0;
-        }
-
-        button {
-            font-family: 'Roboto Mono', monospace; 
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        
-    </style>
-</head>
-
-<body>
-    <h1>Welcome to Bonagit Store!</h1>
-    <p>Nama Aplikasi:  {{ app_name }}</p>
-    <p>Nama:  {{ name }}</p>
-    <p>Kelas:  {{ my_class }}</p>
-    <p>NPM:  {{ npm }}</p>
-    <h5>Sesi terakhir login: {{ last_login }}</h5>
-
-    <!-- <div class="product">
-        <h2>{{ product_name }}</h2>
-        <p>Price: {{ price }}</p>
-        <p>Description: {{ description }}</p>
-        <p>Type: {{ type }}</p>
-        <p>Cocoa Ratio: {{ cocoa_ratio }}</p>
-    </div> -->
-</body>
-
-{% if not product_entries %}
-<h2>We don't have any product(s) right now. Sorry!</h2>
-{% else %}
-<table>
-  <tr>
-    <th>Product</th>
-    <th>Price</th>
-    <th>Description</th>
-    <th>Type</th>
-    <th>Cocoa Ratio</th>
-  </tr>
-
-  {% comment %} Berikut cara memperlihatkan data product di bawah baris ini 
-  {% endcomment %} 
-  {% for product_entry in product_entries %}
-  <tr>
-    <td>{{product_entry.product_name}}</td>
-    <td>${{product_entry.price}}</td>
-    <td>{{product_entry.description}}</td>
-    <td>{{product_entry.type}}</td>
-    <td>{{product_entry.cocoa_ratio}}%</td>
-  </tr>
-  {% endfor %}
-</table>
-{% endif %}
-
-<!-- best practice aja sih sih ini -->
-<br/> 
-
-<a href="{% url 'main:create_product_entry' %}">
-  <button>Add New Product</button>
-</a>
-
-<a href="{% url 'main:logout' %}">
-    <button>Logout</button>
-</a>
-
+    <div class="justify-start">
+      <div class="flex font-bold py-10 px-2 w-fit">
+        <h1 class="text-[#172554] text-center">Last Login: {{last_login}}</h1>
+      </div>
+    </div>
+</div>
 {% endblock content %}

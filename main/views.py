@@ -1,14 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from main.forms import ProductForm
 from main.models import ChocolateProduct
-from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
 @login_required(login_url='/login') # Agar main page HANYA dapat diakses oleh pengguna yang sudah login (terautentikasi)
@@ -16,14 +15,9 @@ def show_main(request):
     product_entries = ChocolateProduct.objects.filter(user=request.user) # Agar menampilkan Product yang HANYA berhubungan dengan specific user 
 
     context = {
-        'name': request.user.username, # Menampilakn nama user yang sedang logged in.
-        'product_name' : 'Läderach',
-        'price' : '$110',
-        'description' : 'Premium chocolate from Swiss with the freshest ingredients to create memorable moments of joy!',
-        'type' : 'Dark Chocolate',
-        'cocoa_ratio' : '80%',
+        'name': request.user.username, # Menampilakn nama user yang sedang logged in
         'app_name' : 'Bonagit Store',
-        'name' : 'Shaine Glorvina Mathea',
+        'my_name' : 'Shaine Glorvina Mathea',
         'my_class' : 'PBP B',
         'npm' : '2306245573',
         'product_entries' : product_entries,
@@ -79,20 +73,24 @@ def register(request):
 
 # Mengautentikasi pengguna yang ingin login
 def login_user(request):
-   if request.method == 'POST':
-      form = AuthenticationForm(data=request.POST)
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
 
-      if form.is_valid():
-        user = form.get_user()
-        login(request, user)
-        response = HttpResponseRedirect(reverse("main:show_main"))
-        response.set_cookie('last_login', str(datetime.datetime.now()))
-        return response
+        if(form.is_valid()):
+            user = form.get_user()
+            login(request,user)
+            response = HttpResponseRedirect(reverse('main:show_main'))
+            date_now = datetime.datetime.now()
+            date_formatted = date_now.strftime("%a, %d %B %Y (%H:%M:%S)")
+            response.set_cookie('last_login',date_formatted)
+            return response
+        else:
+            messages.error(request, "Invalid username or password :(")
+    else:
+        form = AuthenticationForm
 
-   else:
-      form = AuthenticationForm(request)
-   context = {'form': form}
-   return render(request, 'login.html', context)
+    context = {'form':form}
+    return render(request,'login.html',context)
 
 # Melakukan mekanisme logout dan menghapus cookie last_login saat pengguna melakukan logout.
 def logout_user(request):
@@ -100,3 +98,26 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
+
+def edit_product(request, id):
+    # Get product entry berdasarkan id
+    product = ChocolateProduct.objects.get(pk = id)
+
+    # Set product entry sebagai instance dari form
+    form = ProductForm(request.POST or None, instance=product)
+
+    if form.is_valid() and request.method == "POST":
+        # Simpan form dan kembali ke halaman awal
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_product.html", context)
+
+def delete_product(request, id):
+    # Get product berdasarkan id
+    product = ChocolateProduct.objects.get(pk = id)
+    # Hapus product
+    product.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:show_main'))
