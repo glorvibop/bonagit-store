@@ -9,18 +9,18 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.utils.html import strip_tags
 
 @login_required(login_url='/login') # Agar main page HANYA dapat diakses oleh pengguna yang sudah login (terautentikasi)
 def show_main(request):
-    product_entries = ChocolateProduct.objects.filter(user=request.user) # Agar menampilkan Product yang HANYA berhubungan dengan specific user 
-
     context = {
         'name': request.user.username, # Menampilakn nama user yang sedang logged in
         'app_name' : 'Bonagit Store',
         'my_name' : 'Shaine Glorvina Mathea',
         'my_class' : 'PBP B',
         'npm' : '2306245573',
-        'product_entries' : product_entries,
         'last_login': request.COOKIES['last_login'],
     }
     return render(request, "main.html", context)
@@ -40,12 +40,12 @@ def create_product_entry(request):
 
 # Menyimpan hasil query dari seluruh data yang ada pada entry ChocolateProduct
 def show_xml(request):
-    data = ChocolateProduct.objects.all()
+    data = ChocolateProduct.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 
 # Menyimpan hasil query dari seluruh data yang ada pada entry ChocolateProduct
 def show_json(request):
-    data = ChocolateProduct.objects.all()
+    data = ChocolateProduct.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
 # Menyimpan hasil query dari data dengan id tertentu yang ada pada entry ChocolateProduct
@@ -78,14 +78,14 @@ def login_user(request):
 
         if(form.is_valid()):
             user = form.get_user()
-            login(request,user)
+            login(request, user)
             response = HttpResponseRedirect(reverse('main:show_main'))
             date_now = datetime.datetime.now()
             date_formatted = date_now.strftime("%a, %d %B %Y (%H:%M:%S)")
             response.set_cookie('last_login',date_formatted)
             return response
         else:
-            messages.error(request, "Invalid username or password :(")
+            messages.error(request, "Invalid username or password :( Please try again!")
     else:
         form = AuthenticationForm
 
@@ -121,3 +121,23 @@ def delete_product(request, id):
     product.delete()
     # Kembali ke halaman awal
     return HttpResponseRedirect(reverse('main:show_main'))
+
+# Menambahkan product baru ke basis data dengan AJAX
+@csrf_exempt
+@require_POST
+def add_product_entry_ajax(request):
+    product_name = strip_tags(request.POST.get("product_name")) # strip HTML tags! --> untuk "membersihkan" data baru
+    price = request.POST.get("price")
+    description = strip_tags(request.POST.get("description"))   # strip HTML tags! --> untuk "membersihkan" data baru
+    type = strip_tags(request.POST.get("type"))
+    cocoa_ratio = request.POST.get("cocoa_ratio")               # strip HTML tags! --> untuk "membersihkan" data baru
+    user = request.user
+
+    new_product = ChocolateProduct(
+        product_name=product_name, price=price,
+        description=description, type=type, cocoa_ratio=cocoa_ratio,
+        user=user
+    )
+    new_product.save()
+
+    return HttpResponse(b"CREATED", status=201)
