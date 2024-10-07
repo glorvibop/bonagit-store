@@ -145,6 +145,54 @@ Pertama, saya membuat fitur edit dan delete menu dengan menambahkan 2 function b
 
 Saya juga menambahkan beberapa gambar pada website saya agar tampilannya lebih menarik. Untuk melakukan hal ini, saya membuat konfigurasi static files dengan membuat direktori ```static``` yang berisi subdirektori ```css``` dan ```image``` untuk file-file yang dibutuhkan. Setelah itu, saya memodifikasi file ```settings.py``` dengan menambahkan barisan kode pada ```MIDDLEWARE``` dan ```STATIC_URL``` seperti yang ada di Tutorial 4 agar Django dapat mengelola file statis secara otomatis.
 
-Pada direktori ```static/css``` saya menambahkan file ```global.css``` untuk melakukan styling yang diperlukan dalam website saya. Jangan lupa untuk selalu menambahkan ```{% load static %}``` pada setiap template yang ingin menggunakan static files yang telah dibuat. Saya juga telah membuat ```navbar.html``` untuk menampilkan navabar pada setiap template. Jangan lupa untuk selalu menambahkan ```{% include '<nama-file>'% }```. Saya juga membuat ```card_food.html``` serta c``card_info.html``` pada ```main/templates```. Terakhir, saya melakukan styling dengan TailwindCSS untuk setiap file.html sampai mendapatkan layout dan design yang saya inginkan.
+Pada direktori ```static/css``` saya menambahkan file ```global.css``` untuk melakukan styling yang diperlukan dalam website saya. Jangan lupa untuk selalu menambahkan ```{% load static %}``` pada setiap template yang ingin menggunakan static files yang telah dibuat. Saya juga telah membuat ```navbar.html``` untuk menampilkan navabar pada setiap template. Jangan lupa untuk selalu menambahkan ```{% include '<nama-file>'% }```. Saya juga membuat dan mempercantik design dari ```card_food.html``` dan ```card_info.html``` pada ```main/templates```. Terakhir, saya melakukan styling dengan TailwindCSS untuk setiap file html sampai mendapatkan layout dan design yang saya inginkan.
+</details>
 
+<details>
+<summary>
+  <span style="font-size:16px;"><b>Tugas 6: JavaScript dan AJAX</b></span>
+</summary>
+
+### 1. Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+JavaScript adalah _cross-platform high-level multi-paradigm programming language_. JavaScript banyak digunakan dalam pengembangan apliksasi web karena manipulasi halaman web dapat dilakukan secara dinamis dan interaksi antara halaman web dengan user dapat meningkat. Ada beberapa manfaat utama lainnya dari penggunaan JavaScript seperti:
+- Interaktivitas: JavaScript memungkinkan pengembang untuk menambahkan fitur interaktif seperti validasi form, manipulasi DOM, dan animasi yang membuat halaman web lebih dinamis
+- _Asynchronous Processing_: Dengan menggunakan AJAX atau Fetch API, JavaScript memungkinkan halaman web untuk mengambil atau mengirim data ke server tanpa harus me-refresh seluruh halaman
+- _User Experience_: JavaScript dapat mempercepat respon halaman, melakukan proses real-time, dan memperbarui bagian halaman tanpa mengganggu alur kerja user.
+
+### 2. Jelaskan fungsi dari penggunaan ```await``` ketika kita menggunakan ```fetch()```! Apa yang akan terjadi jika kita tidak menggunakan ```await```?
+Ketika kita menggunakan ```fetch()``` di dalam fungsi ```async```, ```await``` digunakan untuk "menunggu" Promise hingga Promise tersebut selesai diproses (fulfilled/rejected) sebelum melanjutkan eksekusi kode berikutnya. Ketika kita menggunakan ```fetch()``` untuk mengambil data dari server, ```await``` memastikan bahwa JavaScript menunggu hingga response dari server diterima sebelum melanjutkan eksekusi kode selanjutnya.
+
+Jika kita tidak menggunakan ```await```, maka eksekusi kode berikutnya akan dijalankan sebelum respons dari ```fetch()``` diterima. Ini dapat menyebabkan kita mencoba mengakses data yang belum tersedia, sehingga bisa terjadi error atau data yang tidak valid. ```await``` menjamin bahwa data telah diterima sebelum diproses lebih lanjut. ```async``` dan ```await``` meningkatkan _readability_, mengurangi _callback hell_, dan mempermudah error handling dengan try-catch.
+
+### 3. Mengapa kita perlu menggunakan decorator ```csrf_exempt``` pada view yang akan digunakan untuk AJAX ```POST```?
+Decorator ```csrf_exempt``` digunakan untuk menonaktifkan pemeriksaan CSRF token pada view tertentu yang menerima AJAX ```POST``` request. Secara default, Django mewajibkan setiap ```POST``` request untuk memiliki CSRF token sebagai langkah keamanan untuk mencegah serangan Cross-Site Request Forgery (CSRF). Namun, pada situasi tertentu, CSRF token mungkin tidak disertakan secara otomatis. Oleh karena itu, pada function ```add_product_entry_ajax``` di ```main/views.py``` decorator ```csrf_exempt``` menonaktifkan pemeriksaan CSRF untuk view tersebut. Meskipun demikian, ini harus dilakukan dengan hati-hati dan disertai langkah pengamanan lain, karena menonaktifkan CSRF dapat membuka celah keamanan jika tidak dikelola dengan baik.
+
+### 4. Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?
+Pembersihan data di backend diperlukan untuk memastikan keamanan dan integritas data. Melakukan pembersihan di frontend saja tidak cukup aman karena frontend (JavaScript dan HTML) bisa dimanipulasi oleh user yang berniat jahat. Jika hanya mengandalkan validasi frontend, user bisa mengabaikannya atau mengirimkan data yang telah dimodifikasi langsung ke server melalui tools seperti Postman atau dengan manipulasi request.
+
+Dengan melakukan pembersihan data di backend, kita melindungi aplikasi dari potensi serangan seperti Cross-Site Scripting (XSS) atau SQL Injection. Backend adalah lapisan terakhir yang bisa mengontrol dan memvalidasi data sebelum dimasukkan ke dalam database, sehingga pembersihan data di backend adalah langkah wajib untuk keamanan.
+
+### 5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+Saya mulai dengan menambahkan dua import `from django.views.decorators.csrf import csrf_exempt` dan `from django.views.decorators.http import require_POST` pada `main/views.py`. Kemudian, saya juga membuat function baru pada `main/views.py` yaitu `add_product_entry_ajax(request)` yang akan digunakan untuk menambahkan produk baru ke dalam basis data menggunakan AJAX `POST`. Function ini menggunakan decorator `@csrf_exempt` dan `@require_POST` untuk menangani request `POST` tanpa memerlukan CSRF token. Isi dari function `add_product_entry_ajax` disesuaikan dengan model yang digunakan, sehingga pembuatan `new_product` menjadi seperti ini:
+
+```
+new_product = ChocolateProduct(
+        product_name=product_name, price=price,
+        description=description, type=type, cocoa_ratio=cocoa_ratio,
+        user=user
+    )
+    new_product.save()
+```
+
+Kemudian, saya menambahkan routing untuk function `add_product_entry_ajax` pada `main/urls.py` agar fungsi yang sudah diimpor tadi dapat diakses.
+
+Setelah itu, saya mengatur menampilkan data product entry dengan `fetch()` API dengan menghapus `product_entries = Product.objects.filter(user=request.user)` dan `'product_entries': product_entries,` pada `main/views.py`. Kemudian, saya mengubah baris pertama view dari function `show_json` dan `show_xml` menjadi `data = ChocolateProduct.objects.filter(user=request.user)`
+
+Pada`main/templates/main.html`, saya menghapus block conditional yang sebelumnya menampilkan `product_entries` secara statis, dan menggantinya dengan `<div id="product_entry_cards"></div>`. Div ini nantinya akan diisi secara dinamis menggunakan data yang diambil melalui AJAX. Selanjutnya, saya membuat fungsi JavaScript `getProductEntries()` menggunakan `fetch()` untuk mengambil data produk dari URL yang mengembalikan JSON data product. Fungsi ini hanya mengambil produk milik pengguna yang sedang logged-in dan kemudian memanggil fungsi `refreshProductEntries()` untuk menampilkan data tersebut pada div yang sudah disiapkan.
+
+Saya memodifikasi `main/templates/main.html` dengan menambahkan tombol yang ketika ditekan akan membuka modal dengan form untuk menambahkan produk baru. Tombol ini memanggil fungsi JavaScript `showModal()` yang menampilkan modal. Di dalam modal tersebut terdapat form dengan field `product_name`, `price`, `description`, `type`, dan `cocoa_ratio` yang nantinya akan dikirim ke server melalui AJAX `POST`. 
+
+Selanjutnya, saya membuat function JavaScript `addProductEntry()` yang bertugas mengirimkan data produk baru ke server menggunakan AJAX `POST`. Function ini menggunakan `fetch()` untuk melakukan `POST` request ke URL `/create-product-entry-ajax/`. Setelah produk berhasil ditambahkan, fungsi ini juga memanggil `refreshProductEntries()` untuk memperbarui daftar produk tanpa harus me-refresh halaman. Selain itu, form di dalam modal akan di-reset, dan modal akan ditutup.
+
+Setelah produk baru ditambahkan melalui AJAX `POST`, saya memastikan bahwa daftar produk di halaman utama akan di-refresh secara asinkronus tanpa perlu reload halaman. Ini dilakukan dengan memanggil `refreshProductEntries()` setelah produk berhasil ditambahkan.
 </details>
