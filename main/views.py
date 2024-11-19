@@ -12,6 +12,8 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils.html import strip_tags
+import json
+from django.http import JsonResponse
 
 @login_required(login_url='/login') # Agar main page HANYA dapat diakses oleh pengguna yang sudah login (terautentikasi)
 def show_main(request):
@@ -141,3 +143,35 @@ def add_product_entry_ajax(request):
     new_product.save()
 
     return HttpResponse(b"CREATED", status=201)
+
+# Integrasi Form Flutter Dengan Layanan Django
+@csrf_exempt
+def create_product_flutter(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            product_name = data["product_name"]
+            price = int(data["price"])
+            description = data["description"]
+            type_ = data["type"]  
+            cocoa_ratio = int(data["cocoa_ratio"])
+
+            # Create a new ChocolateProduct object
+            new_product = ChocolateProduct.objects.create(
+                user=request.user, 
+                product_name=product_name,
+                price=price,
+                description=description,
+                type=type_,
+                cocoa_ratio=cocoa_ratio,
+            )
+            new_product.save()
+
+            return JsonResponse({"status": "success"}, status=200)
+        except KeyError as e:
+            return JsonResponse({"status": "error", "message": f"Missing field: {str(e)}"}, status=400)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+
+    return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
